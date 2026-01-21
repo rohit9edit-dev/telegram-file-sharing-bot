@@ -68,3 +68,17 @@ def setup_handlers(app: Client):
             response += f"\n📅 Member Since: {format_datetime(stats['member_since'])}\n"
         
         await message.reply_text(response)
+
+# ===============================
+# Force Join Callback (Bottom)
+# ===============================
+from pyrogram import filters, Client
+from core.middleware import force_join_required
+
+@Client.on_callback_query(filters.regex("check_force_join"))
+async def force_join_callback(client, callback_query):
+    ok = await force_join_required(lambda c, m: True)(client, callback_query.message)
+    if ok:
+        await callback_query.message.edit_text("✅ Thanks! Ab bot use kar sakte ho.")
+    else:
+        await callback_query.answer("❌ Abhi bhi channel join nahi kiya", show_alert=True)
