@@ -82,3 +82,43 @@ def track_activity(func: Callable):
         
         return await func(client, message)
     return wrapper
+
+# ===============================
+# Force Join Decorator (Bottom)
+# ===============================
+from pyrogram.errors import UserNotParticipant
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from functools import wraps
+from pyrogram import Client, Message
+from config import config
+
+def force_join_required(func):
+    @wraps(func)
+    async def wrapper(client: Client, message: Message):
+        if not config.FORCE_JOIN or not config.FORCE_JOIN_CHANNELS:
+            return await func(client, message)
+
+        user_id = message.from_user.id
+        join_buttons = []
+
+        for channel_id in config.FORCE_JOIN_CHANNELS:
+            try:
+                await client.get_chat_member(channel_id, user_id)
+            except UserNotParticipant:
+                channel_link = f"https://t.me/c/{str(channel_id).replace('-100','')}"
+                join_buttons.append(
+                    [InlineKeyboardButton("🔔 Join Channel", url=channel_link)]
+                )
+            except Exception:
+                return await func(client, message)
+
+        if join_buttons:
+            join_buttons.append([InlineKeyboardButton("✅ Joined", callback_data="check_force_join")])
+            await message.reply_text(
+                "🚫 Bot use karne se pehle niche diye channels join karo:",
+                reply_markup=InlineKeyboardMarkup(join_buttons)
+            )
+            return
+
+        return await func(client, message)
+    return wrapper
