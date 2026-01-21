@@ -1,0 +1,29 @@
+# Telegram Bot Framework
+pyrogram==2.0.106
+TgCrypto==1.2.5
+
+# Database
+pymongo==4.6.1
+motor==3.3.2
+
+# Cache
+redis==5.0.1
+
+# Security & Encryption
+cryptography==42.0.2
+bcrypt==4.1.2
+PyJWT==2.8.0
+
+# Utils
+python-dotenv==1.0.0
+python-dateutil==2.8.2
+
+# Async & Scheduling
+apscheduler==3.10.4
+aiofiles==23.2.1
+
+# Validation
+pydantic==2.9.2
+
+# Logging
+coloredlogs==15.0.1
