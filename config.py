@@ -14,7 +14,16 @@ class Config:
     
     # Storage
     STORAGE_CHANNEL_ID: int = int(os.getenv('STORAGE_CHANNEL_ID', '0'))
-    
+
+    # Force Channel Join
+FORCE_JOIN = os.getenv("FORCE_JOIN", "true").lower() == "true"
+
+FORCE_JOIN_CHANNELS = [
+    int(x.strip())
+    for x in os.getenv("FORCE_JOIN_CHANNELS", "").split(",")
+    if x.strip()
+]
+
     # Admin
     ADMIN_IDS: List[int] = [
         int(id_.strip()) 
